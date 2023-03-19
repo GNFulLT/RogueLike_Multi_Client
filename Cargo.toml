@@ -1,0 +1,13 @@
+[package]
+name = "g_roguelike"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+tokio = { version = "1.26", features = ["full"] }
+rodio = "0.17.1"
+rltk = "0.8.7"
+specs = "0.18.0"
+specs-derive = "0.4.1"
