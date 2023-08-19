@@ -41,7 +41,7 @@ impl Track
 
     pub fn is_playing(&self) -> bool
     {
-        let mut track_info: std::sync::MutexGuard<'_, TrackInfo> = self.track_info.lock().expect("Couldn't lock the track data");
+        let track_info: std::sync::MutexGuard<'_, TrackInfo> = self.track_info.lock().expect("Couldn't lock the track data");
         track_info.current_playing
     }
 
@@ -70,12 +70,15 @@ impl Track
         {
             let s;
             {
+                
                 let mut track_info: std::sync::MutexGuard<'_, TrackInfo> = self.track_info.lock().expect("Couldn't lock the track data");
+                println!("Set current playing true");
+                track_info.current_playing = true;
+
                 if track_info.is_finished
                 {
                     return;
                 }
-                track_info.current_playing = true;
                 let dump_buff: Buffered<Decoder<BufReader<File>>> = track_info.last_track_start_buffer.clone().unwrap();
                 // start
                 // -- +
@@ -115,6 +118,11 @@ impl Track
         {
             {
                 let mut track_info = self.track_info.lock().expect("Couldn't lock the track data");
+                if track_info.current_playing
+                {
+                    println!("Sound is already playing. Return");
+                    return;
+                }
                 track_info.current_playing = true;
                 track_info.is_finished = false;
 

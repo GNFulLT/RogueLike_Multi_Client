@@ -88,6 +88,7 @@ impl AudioManager
     pub fn try_to_continue_bg_async(&mut self) -> bool
     {
         let bg_track = self.bg_track.clone();
+        println!("Continue");
         tokio::spawn(async move {
             bg_track.try_to_continue_and_sleep();
         });

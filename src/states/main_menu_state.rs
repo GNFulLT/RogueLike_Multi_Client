@@ -48,7 +48,7 @@ impl RgState for MainMenuState
         // Check bg music playing
         if !props.global.as_ref().borrow().audio_manager.bg_track.is_playing()
         {
-            print!("Starting mainmenustate background music again");
+            println!("Starting mainmenustate background music again");
             // If it is not playing play again
             props.global.borrow_mut().audio_manager.play_bg_track_async(self.bg_music.clone());
         }
