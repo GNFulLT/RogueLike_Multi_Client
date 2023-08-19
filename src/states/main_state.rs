@@ -7,7 +7,7 @@ use rodio::Decoder;
 use rodio::source::Buffered;
 
 use crate::global::global::Global;
-use super::rg_state::{RgState, InitProps};
+use super::rg_state::{RgState, InitProps, TickProps};
 pub struct MainState
 {
     pub global:Rc<RefCell<Global>>,
@@ -33,17 +33,19 @@ impl GameState for MainState
 {
     fn tick(&mut self, ctx: &mut rltk::BTerm) {
 
-        if !self.state_inited
         {
-            let init_props = InitProps{ctx,global:self.global.clone()};
-            self.state_inited = self.current_state.as_ref().borrow_mut().on_init(&init_props);
-        }
 
-        // First audio check
-        let audio_manager = &mut self.global.as_ref().borrow_mut().audio_manager;
-        
+            if !self.state_inited
+            {
+                let init_props = InitProps{ctx,global:self.global.clone()};
+                self.state_inited = self.current_state.as_ref().borrow_mut().on_init(&init_props);
+            }
+    
+            // First audio check
+            let audio_manager = &mut self.global.as_ref().borrow_mut().audio_manager;
+            
             let need_handle = audio_manager.needs_handle();
-
+    
             // Output device changed Need handling
             if need_handle
             {
@@ -53,9 +55,9 @@ impl GameState for MainState
                 {
                     println!("Sound already playing stop, rebuild and continue");
                     audio_manager.bg_track.stop_sound();
-                    
+                        
                     audio_manager.rebuild_output();
-                    
+                        
                     audio_manager.try_to_continue_bg_async();
                 }
                 // There is no music that is playing. Just rebuild the output
@@ -63,7 +65,11 @@ impl GameState for MainState
                     audio_manager.rebuild_output();
                 }
             }
-            
+    
+        }
+        let tick_props = TickProps{ctx,global:self.global.clone()};
+
+        self.current_state.as_ref().borrow_mut().on_tick(&tick_props);    
                 
 
     }
