@@ -2,22 +2,18 @@ use super::audio_manager::*;
 
 pub struct Global
 {
-    pub audio_manager: Option<AudioManager>
+    pub audio_manager: AudioManager
 }
 
 
 impl Global 
 {
-    pub fn new() -> Global
+    pub fn new() -> Result<Global,String>
     {
-        let mut audio_manager:Option<AudioManager> = None;
-        if AudioManager::can_be_created()
-        {
-            let mut mng = AudioManager::new();
-            mng.init();
-            audio_manager = Some(mng);
-        }
         
-        Global{ audio_manager }
+        let mut mng = AudioManager::new();
+        mng.init();
+        
+        Ok(Global{ audio_manager:mng })
     }
 }
